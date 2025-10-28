@@ -10,7 +10,8 @@ public class Felhasznalo {
 
     @Id
     private String id;
-
+// kis string modositas
+    //kis valami más is
     @Indexed(unique = true)
     private String email;
 

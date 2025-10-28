@@ -1,4 +1,4 @@
-// ez itt a minimalis biztonsagi beallitas + CORS engedely a Next.js-nek
+// hu/szakdolgozat/azonositas/biztonsag/BiztonsagBeallitas.java
 package hu.szakdolgozat.azonositas.biztonsag;
 
 import org.springframework.context.annotation.Bean;
@@ -30,21 +30,21 @@ public class BiztonsagBeallitas {
         return http.build();
     }
 
-    // ez itt engedi, hogy a http://localhost:3000-rol hivhasd a backendet fejlesztesben
     @Bean
     public CorsConfigurationSource corsForras() {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "http://127.0.0.1:3000",
-                "http://100.111.244.151:3000" // <- a “Network” URL
+                // ha a böngésző a "Network" URL-t használja, ezt is hagyhatod:
+                "http://100.111.244.151:3000"
         ));
-        cors.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+        cors.setAllowedMethods(List.of("GET","POST","DELETE","PUT","OPTIONS"));
         cors.setAllowedHeaders(List.of("Content-Type","Authorization"));
         cors.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource forras = new UrlBasedCorsConfigurationSource();
-        forras.registerCorsConfiguration("/**", cors);
-        return forras;
+        UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
+        src.registerCorsConfiguration("/**", cors);
+        return src;
     }
 }
