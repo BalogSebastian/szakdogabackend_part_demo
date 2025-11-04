@@ -1,3 +1,4 @@
+// hu/szakdolgozat/azonositas/modell/dok/PlaylistDokumentum.java
 package hu.szakdolgozat.azonositas.modell.dok;
 
 import org.springframework.data.annotation.Id;
@@ -26,57 +27,75 @@ public class PlaylistDokumentum {
     @Field("letrehozva")
     private LocalDateTime letrehozva;
 
+    // ÚJ: playlist típus (alapértelmezetten "eredeti"; módosított példány: "dns_mod")
+    @Field("tipus")
+    private String tipus = "eredeti";
+
+    // ÚJ: ha dns_mod, itt hivatkozunk az eredetire
+    @Field("derivedFrom")
+    private String derivedFrom;
+
+    // ÚJ: legutóbbi DNS elemzés mentése (Ortiz vagy más módszer)
+    @Field("dns")
+    private DnsProfil dns;
+
+    // ÚJ: ha módosított (dns_mod), itt tároljuk a választott célhangulatot
+    @Field("celHangulat")
+    private String celHangulat;
+
     // --- Alap konstruktor
     public PlaylistDokumentum() {
         this.id = UUID.randomUUID().toString();
         this.letrehozva = LocalDateTime.now();
     }
 
-    // --- Fő konstruktor
+    // --- Fő konstruktor (eredeti playlisthez)
     public PlaylistDokumentum(String email, String nev, List<SzamAdat> szamok) {
         this.id = UUID.randomUUID().toString();
         this.email = email;
         this.nev = nev;
         this.szamok = szamok;
         this.letrehozva = LocalDateTime.now();
+        this.tipus = "eredeti";
+    }
+
+    // --- Kiegészítő konstruktor (származtatott / dns_mod)
+    public PlaylistDokumentum(String email, String nev, List<SzamAdat> szamok, String tipus, String derivedFrom) {
+        this.id = UUID.randomUUID().toString();
+        this.email = email;
+        this.nev = nev;
+        this.szamok = szamok;
+        this.letrehozva = LocalDateTime.now();
+        this.tipus = (tipus == null || tipus.isBlank()) ? "eredeti" : tipus;
+        this.derivedFrom = derivedFrom;
     }
 
     // --- Getterek / Setterek
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getNev() { return nev; }
+    public void setNev(String nev) { this.nev = nev; }
 
-    public String getNev() {
-        return nev;
-    }
+    public List<SzamAdat> getSzamok() { return szamok; }
+    public void setSzamok(List<SzamAdat> szamok) { this.szamok = szamok; }
 
-    public void setNev(String nev) {
-        this.nev = nev;
-    }
+    public LocalDateTime getLetrehozva() { return letrehozva; }
+    public void setLetrehozva(LocalDateTime letrehozva) { this.letrehozva = letrehozva; }
 
-    public List<SzamAdat> getSzamok() {
-        return szamok;
-    }
+    public String getTipus() { return tipus; }
+    public void setTipus(String tipus) { this.tipus = tipus; }
 
-    public void setSzamok(List<SzamAdat> szamok) {
-        this.szamok = szamok;
-    }
+    public String getDerivedFrom() { return derivedFrom; }
+    public void setDerivedFrom(String derivedFrom) { this.derivedFrom = derivedFrom; }
 
-    public LocalDateTime getLetrehozva() {
-        return letrehozva;
-    }
+    public DnsProfil getDns() { return dns; }
+    public void setDns(DnsProfil dns) { this.dns = dns; }
 
-    public void setLetrehozva(LocalDateTime letrehozva) {
-        this.letrehozva = letrehozva;
-    }
+    public String getCelHangulat() { return celHangulat; }
+    public void setCelHangulat(String celHangulat) { this.celHangulat = celHangulat; }
 
     // --- Belső osztály a zeneszámokhoz
     public static class SzamAdat {
@@ -90,20 +109,10 @@ public class PlaylistDokumentum {
             this.cim = cim;
         }
 
-        public String getEloado() {
-            return eloado;
-        }
+        public String getEloado() { return eloado; }
+        public void setEloado(String eloado) { this.eloado = eloado; }
 
-        public void setEloado(String eloado) {
-            this.eloado = eloado;
-        }
-
-        public String getCim() {
-            return cim;
-        }
-
-        public void setCim(String cim) {
-            this.cim = cim;
-        }
+        public String getCim() { return cim; }
+        public void setCim(String cim) { this.cim = cim; }
     }
 }
