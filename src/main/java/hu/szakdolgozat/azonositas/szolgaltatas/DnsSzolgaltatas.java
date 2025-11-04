@@ -25,7 +25,6 @@ public class DnsSzolgaltatas {
         this.http = RestClient.create();
     }
 
-    // 1) Elemzés (Ortiz)
     public DnsProfil elemezOrtiz(String playlistId, String email) {
         var opt = tarolo.findByIdAndEmail(Objects.toString(playlistId, "").trim(),
                 Objects.toString(email, "").trim().toLowerCase());
@@ -44,7 +43,6 @@ public class DnsSzolgaltatas {
         return dns;
     }
 
-    // 2) Módosítás: részleges csere célhangulatra (Deezer ajánlások)
     public PlaylistDokumentum modositOrtiz(String playlistId, String email, String celHangulat, double csereArany) {
         csereArany = Math.max(0.1, Math.min(csereArany, 0.6)); // 10–60% közt
         var opt = tarolo.findByIdAndEmail(Objects.toString(playlistId, "").trim(),
@@ -55,7 +53,6 @@ public class DnsSzolgaltatas {
         var lista = new ArrayList<>(Optional.ofNullable(eredeti.getSzamok()).orElse(List.of()));
         if (lista.isEmpty()) return null;
 
-        // Ponthozás: mely számok illenek legkevésbé a célhoz -> ezeket cseréljük
         List<Double> celPont = new ArrayList<>();
         for (var s : lista) {
             Map<String, Double> pr = OrtizHeurisztika.profil(
@@ -66,16 +63,13 @@ public class DnsSzolgaltatas {
         }
 
         int darabCsere = Math.max(1, (int)Math.round(lista.size() * csereArany));
-        // indexek a legkisebb célpont alapján
         List<Integer> idx = new ArrayList<>();
         for (int i = 0; i < celPont.size(); i++) idx.add(i);
         idx.sort(Comparator.comparingDouble(celPont::get)); // alulról felfelé
         List<Integer> cserelendoIndexek = idx.subList(0, Math.min(darabCsere, idx.size()));
 
-        // Deezer-ből alternatívák (túlkérés, hogy legyen választék)
         List<PlaylistDokumentum.SzamAdat> ajanlott = ajanlottDalokDeezer(celHangulat, darabCsere * 3);
 
-        // Felépítjük az új számlistát
         Set<String> marVan = lista.stream()
                 .map(s -> (Objects.toString(s.getEloado(),"")+"—"+Objects.toString(s.getCim(),"")).toLowerCase(Locale.ROOT))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -88,14 +82,12 @@ public class DnsSzolgaltatas {
                 String key = (Objects.toString(jel.getEloado(),"")+"—"+Objects.toString(jel.getCim(),"")).toLowerCase(Locale.ROOT);
                 if (!marVan.contains(key)) { uj = jel; marVan.add(key); break; }
             }
-            if (uj != null) lista.set(i, uj); // ha nincs elég ajánlat, a helyén marad
+            if (uj != null) lista.set(i, uj);
         }
 
-        // Új playlist létrehozása
         String ujNev = eredeti.getNev() + " (DNS – Ortiz → " + celHangulat + ")";
         var uj = new PlaylistDokumentum(eredeti.getEmail(), ujNev, lista, "dns_mod", eredeti.getId());
         uj.setCelHangulat(celHangulat);
-        // opcionálisan készítünk friss DNS profilt az új listáról is:
         Map<String, Double> profilUj = OrtizHeurisztika.profil(
                 lista.stream().map(PlaylistDokumentum.SzamAdat::getCim).toList(),
                 lista.stream().map(PlaylistDokumentum.SzamAdat::getEloado).toList()
@@ -107,7 +99,6 @@ public class DnsSzolgaltatas {
         return uj;
     }
 
-    // --- Deezer kliens (egyszerű kereső) ---
     private List<PlaylistDokumentum.SzamAdat> ajanlottDalokDeezer(String celHangulat, int limit) {
         limit = Math.max(3, Math.min(limit, 60));
         List<String> kws = OrtizHeurisztika.kulcsszavai(celHangulat);
@@ -135,7 +126,6 @@ public class DnsSzolgaltatas {
             }
             return out;
         } catch (Exception e) {
-            // Hiba esetén visszaadunk üres listát (a módosítás akkor kevesebbet cserél)
             return List.of();
         }
     }

@@ -6,7 +6,6 @@ import java.util.*;
 public final class OrtizHeurisztika {
     private OrtizHeurisztika() {}
 
-    // HU + EN kulcsszavak: cím (nagyobb súly), előadó (kisebb súly)
     private static final Map<String, List<String>> KW = Map.of(
             "Boldog", List.of("happy","joy","smile","dance","sun","good","party","boldog","öröm","mosoly","tánc"),
             "Szomorú", List.of("sad","cry","blue","tears","alone","lonely","szomorú","sírok","könny","magány"),
@@ -27,14 +26,13 @@ public final class OrtizHeurisztika {
             for (String hang : Hangulatok.ALAP) {
                 double inc = 0.0;
                 for (String w : KW.getOrDefault(hang, List.of())) {
-                    if (c.contains(w)) inc += 1.0;        // cím nagyobb súly
-                    if (e.contains(w)) inc += 0.3;        // előadó kisebb súly
+                    if (c.contains(w)) inc += 1.0;
+                    if (e.contains(w)) inc += 0.3;
                 }
                 pont.put(hang, pont.get(hang) + inc);
             }
         }
 
-        // Normalizálás: ha minden 0, akkor egyenletes
         double ossz = pont.values().stream().mapToDouble(Double::doubleValue).sum();
         if (ossz <= 0.0001) {
             double egys = 1.0 / Hangulatok.ALAP.size();
@@ -52,7 +50,6 @@ public final class OrtizHeurisztika {
     }
 
     public static List<String> kulcsszavai(String celHangulat) {
-        // A Deezer-kereséshez célhangulat-fókuszú kulcsszavak
         return switch (celHangulat) {
             case "Boldog" -> List.of("happy", "joy", "dance");
             case "Szomorú" -> List.of("sad", "cry", "alone");

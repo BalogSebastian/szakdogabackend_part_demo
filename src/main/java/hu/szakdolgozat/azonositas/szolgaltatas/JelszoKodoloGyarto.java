@@ -1,4 +1,3 @@
-// ez itt a jelszo kodolo bean (BCrypt)
 package hu.szakdolgozat.azonositas.szolgaltatas;
 
 import org.springframework.context.annotation.Bean;

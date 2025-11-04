@@ -27,29 +27,23 @@ public class PlaylistDokumentum {
     @Field("letrehozva")
     private LocalDateTime letrehozva;
 
-    // ÚJ: playlist típus (alapértelmezetten "eredeti"; módosított példány: "dns_mod")
     @Field("tipus")
     private String tipus = "eredeti";
 
-    // ÚJ: ha dns_mod, itt hivatkozunk az eredetire
     @Field("derivedFrom")
     private String derivedFrom;
 
-    // ÚJ: legutóbbi DNS elemzés mentése (Ortiz vagy más módszer)
     @Field("dns")
     private DnsProfil dns;
 
-    // ÚJ: ha módosított (dns_mod), itt tároljuk a választott célhangulatot
     @Field("celHangulat")
     private String celHangulat;
 
-    // --- Alap konstruktor
     public PlaylistDokumentum() {
         this.id = UUID.randomUUID().toString();
         this.letrehozva = LocalDateTime.now();
     }
 
-    // --- Fő konstruktor (eredeti playlisthez)
     public PlaylistDokumentum(String email, String nev, List<SzamAdat> szamok) {
         this.id = UUID.randomUUID().toString();
         this.email = email;
@@ -59,7 +53,6 @@ public class PlaylistDokumentum {
         this.tipus = "eredeti";
     }
 
-    // --- Kiegészítő konstruktor (származtatott / dns_mod)
     public PlaylistDokumentum(String email, String nev, List<SzamAdat> szamok, String tipus, String derivedFrom) {
         this.id = UUID.randomUUID().toString();
         this.email = email;
@@ -70,7 +63,6 @@ public class PlaylistDokumentum {
         this.derivedFrom = derivedFrom;
     }
 
-    // --- Getterek / Setterek
     public String getId() { return id; }
 
     public String getEmail() { return email; }
@@ -97,7 +89,6 @@ public class PlaylistDokumentum {
     public String getCelHangulat() { return celHangulat; }
     public void setCelHangulat(String celHangulat) { this.celHangulat = celHangulat; }
 
-    // --- Belső osztály a zeneszámokhoz
     public static class SzamAdat {
         private String eloado;
         private String cim;

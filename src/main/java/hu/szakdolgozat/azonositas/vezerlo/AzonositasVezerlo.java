@@ -20,18 +20,15 @@ public class AzonositasVezerlo {
         this.svc = svc;
     }
 
-    // -- POST /api/regisztral
     @PostMapping("/regisztral")
     public ResponseEntity<?> regisztral(@Valid @RequestBody RegisztralKer ker) {
         String eredmeny = svc.regisztral(ker);
         if ("siker".equals(eredmeny)) {
             return ResponseEntity.ok("siker");
         }
-        // lehet: "mar_letezik"
         return ResponseEntity.badRequest().body(eredmeny);
     }
 
-    // -- POST /api/belep
     @PostMapping("/belep")
     public ResponseEntity<?> belep(@Valid @RequestBody BelepKer ker) {
         String tokenVagyHiba = svc.belep(ker);
@@ -41,25 +38,21 @@ public class AzonositasVezerlo {
         return ResponseEntity.ok(tokenVagyHiba); // pl. "token_..."
     }
 
-    // -- POST /api/jelszo/elfelejtett  (fejlesztesben visszaadhat tokent is)
     @PostMapping("/jelszo/elfelejtett")
     public ResponseEntity<?> elfelejtett(@Valid @RequestBody ElfelejtettJelszoKer ker) {
         String valasz = svc.letrehozJelszoToken(ker.getEmail());
         return ResponseEntity.ok(valasz);
     }
 
-    // -- POST /api/jelszo/uj  (token + uj jelszo)
     @PostMapping("/jelszo/uj")
     public ResponseEntity<?> ujJelszo(@Valid @RequestBody UjJelszoKer ker) {
         String eredmeny = svc.beallitUjJelszo(ker.getToken(), ker.getUjJelszo());
         if ("siker".equals(eredmeny)) {
             return ResponseEntity.ok("siker");
         }
-        // lehet: "ervenytelen" | "lejart" | "hiba"
         return ResponseEntity.badRequest().body(eredmeny);
     }
 
-    // -- POST /api/kijelentkezes  (egyszeru: kliens oldalon dobd el a tokent)
     @PostMapping("/kijelentkezes")
     public ResponseEntity<?> kijelentkezes() {
         return ResponseEntity.ok("ok");

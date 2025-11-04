@@ -8,23 +8,18 @@ import java.util.Map;
 
 public class DnsProfil {
 
-    // pl. "ortiz"
     @Field("modszer")
     private String modszer;
 
-    // pl. "deezer" | "heurisztika"
     @Field("forras")
     private String forras;
 
-    // elemzés időpontja
     @Field("keszult")
     private Instant keszult = Instant.now();
 
-    // hangulat-profil: {"Boldog":0.32, "Szomorú":0.48, ...} [0..1 összege ~1]
     @Field("profil")
     private Map<String, Double> profil;
 
-    // opcionális: induló hangulat címke (pl. a max kategória)
     @Field("induloHangulat")
     private String induloHangulat;
 

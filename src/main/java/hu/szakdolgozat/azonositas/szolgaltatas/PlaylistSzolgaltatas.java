@@ -19,7 +19,6 @@ public class PlaylistSzolgaltatas {
         this.tarolo = tarolo;
     }
 
-    // --- 1️⃣ Fájlfeltöltés alapján új playlist létrehozása
     public String letrehozFajlAlapjan(String email, String nev, MultipartFile fajl) {
         try {
             if (ures(email) || ures(nev) || fajl == null || fajl.isEmpty()) return "hiba";
@@ -54,7 +53,6 @@ public class PlaylistSzolgaltatas {
         }
     }
 
-    // --- 2️⃣ JSON alapú playlist mentés (Deezer API-ból)
     public String letrehozJsonAlapjan(String email, String nev, List<Map<String, String>> szamLista) {
         try {
             if (ures(email) || ures(nev) || szamLista == null) return "hiba";
@@ -77,13 +75,11 @@ public class PlaylistSzolgaltatas {
         }
     }
 
-    // --- 3️⃣ Listázás (csak saját email)
     public List<PlaylistDokumentum> listaz(String email) {
         if (ures(email)) return List.of();
         return tarolo.findByEmailOrderByLetrehozvaDesc(email.trim().toLowerCase());
     }
 
-    // --- 4️⃣ Törlés (csak saját playlist)
     public String torol(String id, String email) {
         if (ures(id) || ures(email)) return "hiba";
         var opt = tarolo.findByIdAndEmail(id.trim(), email.trim().toLowerCase());
@@ -92,7 +88,6 @@ public class PlaylistSzolgaltatas {
         return "siker";
     }
 
-    // --- Parszolások
     private List<PlaylistDokumentum.SzamAdat> parsolM3U(List<String> sorok) {
         List<PlaylistDokumentum.SzamAdat> lista = new ArrayList<>();
         String extinf = null;

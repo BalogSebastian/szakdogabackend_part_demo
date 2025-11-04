@@ -9,9 +9,7 @@ import java.util.Optional;
 
 public interface PlaylistTarolo extends MongoRepository<PlaylistDokumentum, String> {
 
-    // osszes playlist egy emailhez, legujabb elol
     List<PlaylistDokumentum> findByEmailOrderByLetrehozvaDesc(String email);
 
-    // egy playlist id + email alapjan (tulajdon ellenorzeshez)
     Optional<PlaylistDokumentum> findByIdAndEmail(String id, String email);
 }

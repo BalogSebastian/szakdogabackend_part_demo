@@ -10,7 +10,6 @@ public class DnsElemzesKer {
     @NotBlank
     private String email;
 
-    // opcionális, most fixen "ortiz"
     private String modszer = "ortiz";
 
     public String getPlaylistId() { return playlistId; }

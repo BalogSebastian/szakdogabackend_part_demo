@@ -14,7 +14,6 @@ public class DnsModositKer {
     @NotBlank
     private String celHangulat;
 
-    // 0.1–0.6 tartományban, ha nincs megadva -> 0.3
     @Positive
     private Double csereArany;
 
